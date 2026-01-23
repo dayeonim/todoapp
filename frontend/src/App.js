@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { searchJournals, getStats } from './journalData';
+import { searchJournalsAPI } from './api';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -9,6 +10,7 @@ function App() {
   const [error, setError] = useState(null);
   const [stats, setStats] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [useAPI, setUseAPI] = useState(true); // API 사용 여부
 
   // 통계 데이터 로드
   useEffect(() => {
@@ -16,7 +18,7 @@ function App() {
     setStats(statsData);
   }, []);
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     
     if (!searchQuery.trim()) {
@@ -28,17 +30,41 @@ function App() {
     setError(null);
     setHasSearched(true);
 
-    // 약간의 지연을 추가해서 로딩 효과
-    setTimeout(() => {
-      const results = searchJournals(searchQuery);
+    try {
+      let results;
+      
+      if (useAPI) {
+        // OpenAlex API로 실시간 검색
+        results = await searchJournalsAPI(searchQuery);
+        
+        // API 결과가 없으면 로컬 데이터 검색
+        if (results.length === 0) {
+          results = searchJournals(searchQuery);
+        }
+      } else {
+        // 로컬 데이터만 검색
+        results = searchJournals(searchQuery);
+      }
+      
       setSearchResults(results);
       
       if (results.length === 0) {
         setError('검색 결과가 없습니다. 다른 키워드로 시도해보세요.');
       }
+    } catch (err) {
+      console.error('검색 오류:', err);
+      // API 오류 시 로컬 데이터로 폴백
+      const localResults = searchJournals(searchQuery);
+      setSearchResults(localResults);
       
+      if (localResults.length === 0) {
+        setError('검색 중 오류가 발생했습니다. 로컬 데이터에서 결과를 찾지 못했습니다.');
+      } else {
+        setError('API 연결 실패. 로컬 데이터에서 검색했습니다.');
+      }
+    } finally {
       setLoading(false);
-    }, 300);
+    }
   };
 
   const getIFColor = (impactFactor) => {
@@ -89,6 +115,16 @@ function App() {
         )}
 
         <form onSubmit={handleSearch} className="search-form">
+          <div className="search-options">
+            <label className="api-toggle">
+              <input
+                type="checkbox"
+                checked={useAPI}
+                onChange={(e) => setUseAPI(e.target.checked)}
+              />
+              <span>🌐 실시간 API 검색 (OpenAlex - 수만 개 저널)</span>
+            </label>
+          </div>
           <div className="search-input-wrapper">
             <input
               type="text"
@@ -137,7 +173,7 @@ function App() {
               </div>
               
               <div className="impact-factor-section">
-                <div className="if-label">Impact Factor</div>
+                <div className="if-label">{journal.citations !== undefined ? '2-Year Citation Rate' : 'Impact Factor'}</div>
                 <div 
                   className="if-value"
                   style={{ color: getIFColor(journal.impact_factor) }}
@@ -145,6 +181,27 @@ function App() {
                   {journal.impact_factor.toFixed(3)}
                 </div>
               </div>
+              
+              {journal.h_index !== undefined && journal.h_index > 0 && (
+                <div className="additional-metrics">
+                  <div className="metric-item">
+                    <span className="metric-label">h-index:</span>
+                    <span className="metric-value">{journal.h_index}</span>
+                  </div>
+                  {journal.works_count > 0 && (
+                    <div className="metric-item">
+                      <span className="metric-label">논문 수:</span>
+                      <span className="metric-value">{journal.works_count.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {journal.cited_by_count > 0 && (
+                    <div className="metric-item">
+                      <span className="metric-label">총 인용:</span>
+                      <span className="metric-value">{journal.cited_by_count.toLocaleString()}</span>
+                    </div>
+                  )}
+                </div>
+              )}
               
               <div className="if-bar-container">
                 <div 

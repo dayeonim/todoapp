@@ -66,6 +66,38 @@
   margin-bottom: 40px;
 }
 
+.search-options {
+  max-width: 800px;
+  margin: 0 auto 15px;
+  text-align: left;
+}
+
+.api-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 12px 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  font-size: 1em;
+  color: #2d3436;
+  font-weight: 500;
+}
+
+.api-toggle:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.api-toggle input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
 .search-input-wrapper {
   display: flex;
   gap: 15px;
@@ -211,6 +243,34 @@
   font-size: 3em;
   font-weight: 800;
   letter-spacing: -1px;
+}
+
+.additional-metrics {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 15px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.metric-item {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.metric-label {
+  font-size: 0.9em;
+  color: #636e72;
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 0.95em;
+  color: #2d3436;
+  font-weight: 700;
 }
 
 .if-bar-container {
