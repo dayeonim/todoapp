@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
-const API_URL = 'http://localhost:5001/api';
+// 개발/프로덕션 환경에 따라 API URL 설정
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? '/api'  // Vercel 배포 시
+  : 'http://localhost:5001/api';  // 로컬 개발 시
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
