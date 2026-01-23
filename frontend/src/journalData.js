@@ -54,6 +54,19 @@ export const JOURNAL_DATABASE = [
   // Korean Journals
   {name: "Journal of Korean Medical Science", issn: "1011-8934", impact_factor: 3.5, category: "Medicine, General & Internal", quartile: "Q2"},
   {name: "Cancer Research and Treatment", issn: "1598-2998", impact_factor: 4.9, category: "Oncology", quartile: "Q2"},
+  
+  // Human-Computer Interaction
+  {name: "International Journal of Human-Computer Interaction", issn: "1044-7318", impact_factor: 4.9, category: "Computer Science, Cybernetics", quartile: "Q1"},
+  {name: "ACM Transactions on Computer-Human Interaction", issn: "1073-0516", impact_factor: 4.7, category: "Computer Science, Cybernetics", quartile: "Q1"},
+  {name: "Human-Computer Interaction", issn: "0737-0024", impact_factor: 4.1, category: "Computer Science, Cybernetics", quartile: "Q1"},
+  {name: "Interacting with Computers", issn: "0953-5438", impact_factor: 3.2, category: "Computer Science, Cybernetics", quartile: "Q2"},
+  {name: "Behaviour & Information Technology", issn: "0144-929X", impact_factor: 3.7, category: "Computer Science, Cybernetics", quartile: "Q1"},
+  
+  // Additional AI & ML Journals
+  {name: "Artificial Intelligence", issn: "0004-3702", impact_factor: 14.4, category: "Computer Science, Artificial Intelligence", quartile: "Q1"},
+  {name: "Journal of Machine Learning Research", issn: "1532-4435", impact_factor: 6.0, category: "Computer Science, Artificial Intelligence", quartile: "Q1"},
+  {name: "Neural Networks", issn: "0893-6080", impact_factor: 7.8, category: "Computer Science, Artificial Intelligence", quartile: "Q1"},
+  {name: "IEEE Transactions on Neural Networks and Learning Systems", issn: "2162-237X", impact_factor: 10.4, category: "Computer Science, Artificial Intelligence", quartile: "Q1"},
 ];
 
 // 검색 함수
