@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './App.css';
-
-// 개발/프로덕션 환경에 따라 API URL 설정
-const API_URL = process.env.NODE_ENV === 'production' 
-  ? '/api'  // Vercel 배포 시
-  : 'http://localhost:5001/api';  // 로컬 개발 시
+import { searchJournals, getStats } from './journalData';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,19 +12,11 @@ function App() {
 
   // 통계 데이터 로드
   useEffect(() => {
-    fetchStats();
+    const statsData = getStats();
+    setStats(statsData);
   }, []);
 
-  const fetchStats = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/stats`);
-      setStats(response.data);
-    } catch (err) {
-      console.error('통계 로드 실패:', err);
-    }
-  };
-
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
     
     if (!searchQuery.trim()) {
@@ -41,20 +28,17 @@ function App() {
     setError(null);
     setHasSearched(true);
 
-    try {
-      const response = await axios.get(`${API_URL}/search`, {
-        params: { q: searchQuery }
-      });
-      setSearchResults(response.data.results);
-      if (response.data.results.length === 0) {
+    // 약간의 지연을 추가해서 로딩 효과
+    setTimeout(() => {
+      const results = searchJournals(searchQuery);
+      setSearchResults(results);
+      
+      if (results.length === 0) {
         setError('검색 결과가 없습니다. 다른 키워드로 시도해보세요.');
       }
-    } catch (err) {
-      setError('검색 중 오류가 발생했습니다. 서버가 실행 중인지 확인해주세요.');
-      console.error('검색 오류:', err);
-    } finally {
+      
       setLoading(false);
-    }
+    }, 300);
   };
 
   const getIFColor = (impactFactor) => {
